@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ECM Browser</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="ecmbrowser.min.css">
+    <meta charset="UTF-8">
+</head>
+<body>
+<div id="ecmbrowser"></div>
+</body>
+<script src="js/jquery-2.2.0.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="ecmbrowser.js"></script>
+<script>
+    // Server-side emulation
+    // com_ibm_bpm_coach.getManagedAssetUrl("pic.png",com_ibm_bpm_coach.assetType_WEB)
+    window.com_ibm_bpm_coach = {
+        assetType_WEB: "W",
+        getManagedAssetUrl: function (name, prefix) {
+            return prefix + "/" + name;
+        }
+    };
+
+    var bpm = {
+        context: {
+            contextRootMap: {
+                federatedServer: "http://"
+            },
+            binding: {
+                get: function (param) {
+                    if (param == "value") {
+                        return {rootId: "123321123"};
+                    }
+                }
+            },
+            options: {
+                updateDocument: function (ajax) {
+                    console.log(ajax);
+                    setTimeout(function () {
+                        ajax.load({file: {name: "updatedfile"}});
+                    }, 1000);
+                },
+                getDocumentVersions: function (ajax) {
+                    console.log(ajax);
+                    setTimeout(function () {
+                        ajax.load({
+                            files: {
+                                items: [
+                                    {name: "name1", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name2", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name3", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name4", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name5", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name6", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name7", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name8", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name9", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name10", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name11", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name12", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name13", modified: "2014-10-21T08:25:55Z"},
+                                    {name: "name14", modified: "2014-10-21T08:25:55Z"}
+                                ]
+                            }
+                        });
+                    }, 100);
+                },
+                deleteDocument: function (ajax) {
+                    console.log(ajax);
+                    setTimeout(function () {
+                        ajax.load({});
+                    }, 1000);
+                },
+                folderExport: function (ajax) {
+                    console.log(ajax);
+                    setTimeout(function () {
+                        ajax.load({zipUrl: "ogle.com"});
+                    }, 1000);
+                },
+                updateDocumentProperties: function (ajax) {
+                    console.log(ajax);
+                    setTimeout(function () {
+                        ajax.load({file: {name: "updatedPropsfile"}});
+                    }, 1000);
+                },
+                folderExportServlet: {
+                    get: function (param) {
+                        if (param == "value") {
+                            return "www.go"
+                        }
+                    }
+                },
+                ecmservlet: {
+                    get: function (param) {
+                        if (param == "value") {
+                            return "ecmbrowser"
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    function randomBetween(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    $("#ecmbrowser").ECMBrowser(bpm);
+</script>
+</html>
